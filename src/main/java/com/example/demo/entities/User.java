@@ -1,5 +1,4 @@
 package com.example.demo.entities;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -22,14 +21,23 @@ public class User {
     private String email;
     private String password;
     private List<String> roles;
+    private List<Category> categories;
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password,List<String> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.roles = roles;
+    }
+    public User(String username, String email, String password,List<String> roles,List<Category> categories) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.categories = categories;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
     public String getPassword() {
         return password;
     }
