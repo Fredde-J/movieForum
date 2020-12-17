@@ -21,7 +21,7 @@ public class User {
     private String email;
     private String password;
     private List<String> roles;
-    private List<Category> categories;
+
 
     public User(String username, String email, String password,List<String> roles) {
         this.username = username;
@@ -29,13 +29,7 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
-    public User(String username, String email, String password,List<String> roles,List<Category> categories) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-        this.categories = categories;
-    }
+
 
     //@JsonIgnore
     public String getPassword() {

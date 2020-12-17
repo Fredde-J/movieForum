@@ -6,17 +6,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Data
 public class Category {
     @Id
-    public String id;
-    public String name;
-    //@DBRef
-    //public Tread treads
+    private String id;
+    private String name;
+    @DBRef
+    private List<Thread> threads;
 
 
-    public Category(String name) {
+    public Category(String name, List<Thread> threads) {
         this.name = name;
+        this.threads = threads;
     }
 }
