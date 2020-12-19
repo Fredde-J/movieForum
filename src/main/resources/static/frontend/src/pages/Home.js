@@ -21,6 +21,10 @@ const Home = () => {
             }
         }
 
+        const goToThreads = (category)=>{
+          console.log(category)
+        }
+
         useEffect(() => {
            getCategories()
            console.log(categories)
@@ -32,7 +36,7 @@ const Home = () => {
         <CardBody>
           {categories&&
           categories.map((category, i)=> {
-            return  <Button block size="xl" >{category.name}</Button>
+            return  <Button  key={i} onClick={()=>{goToThreads(category)}} block size="xl" >{category.name}</Button>
           })}
          
         </CardBody>

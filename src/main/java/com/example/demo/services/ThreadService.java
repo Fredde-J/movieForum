@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class ThreadService {
     @Autowired
@@ -25,5 +27,9 @@ public class ThreadService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"thread not found by id: "+id);
         }
         threadRepo.deleteById(id);
+    }
+
+    public List<Thread> findAll() {
+        return threadRepo.findAll();
     }
 }

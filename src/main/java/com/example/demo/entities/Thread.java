@@ -15,15 +15,12 @@ public class Thread {
     private String title;
     private Long timestamp;
     @DBRef
-    private List<Post> posts;
-    @DBRef
     private Category category;
 
 
-    public Thread(String title, Long timestamp, List<Post> posts, Category category) {
+    public Thread(String title, Long timestamp, Category category) {
         this.title = title;
         this.timestamp = timestamp;
-        this.posts = posts;
         this.category=category;
     }
 }

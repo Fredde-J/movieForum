@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/threads")
 public class ThreadController {
@@ -19,6 +21,11 @@ public class ThreadController {
     public ResponseEntity<Thread> getThreadById(@PathVariable String id){
        return ResponseEntity.ok(threadService.findByid(id));
     }
+    @GetMapping
+    public ResponseEntity<List<Thread>> getAllThreads(){
+        return ResponseEntity.ok(threadService.findAll());
+    }
+
 
     @PostMapping
     public ResponseEntity<Thread> saveTread(@RequestBody Thread thread){
