@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.module.ResolutionException;
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -39,5 +40,9 @@ public class CategoryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("could not find category by id:" + id));
         }
         categoryRepo.deleteById(id);
+    }
+
+    public List<Category> getAll() {
+        return categoryRepo.findAll();
     }
 }

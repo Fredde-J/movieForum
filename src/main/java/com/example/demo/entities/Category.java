@@ -14,12 +14,9 @@ public class Category {
     @Id
     private String id;
     private String name;
-    @DBRef
-    private List<Thread> threads;
 
 
-    public Category(String name, List<Thread> threads) {
+    public Category(String name) {
         this.name = name;
-        this.threads = threads;
     }
 }
