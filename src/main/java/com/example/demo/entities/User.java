@@ -10,8 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -30,6 +28,8 @@ public class User {
         this.roles = roles;
     }
 
+    public User() {
+    }
 
     //@JsonIgnore
     public String getPassword() {
