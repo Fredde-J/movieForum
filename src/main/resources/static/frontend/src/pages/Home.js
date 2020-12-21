@@ -1,4 +1,5 @@
 import React, {useState,useEffect} from "react";
+import { useHistory } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -8,6 +9,7 @@ import {
 
 const Home = () => {
     const [categories, setCategories] = useState(null);
+    let history = useHistory()
 
     const getCategories = async () =>{
             let res = await fetch(`api/v1/categories`);
@@ -22,7 +24,8 @@ const Home = () => {
         }
 
         const goToThreads = (category)=>{
-          console.log(category)
+          console.log(category.id);
+          history.push("/threads/"+category.id)
         }
 
         useEffect(() => {

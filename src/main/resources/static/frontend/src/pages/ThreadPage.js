@@ -1,4 +1,5 @@
 import React, {useState,useEffect} from "react";
+import { useParams } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -8,10 +9,11 @@ import {
 
 const ThreadPage = () => {
     const [threads, setThreads] = useState(null);
+    let { id } = useParams();
 
     const getThreads = async () =>{
-            let res = await fetch(`api/v1/threads`);
-            console.log(res)
+      let res = await fetch("/api/v1/threads/getThreadsByCategoryId/"+id);
+      console.log(res)
             try {
               res = await res.json();
               setThreads(res);
@@ -24,6 +26,7 @@ const ThreadPage = () => {
        
 
         useEffect(() => {
+          console.log("id:", id)
            getThreads()
            console.log(threads)
         }, [])

@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import com.example.demo.entities.Category;
+import com.example.demo.entities.Post;
 import com.example.demo.entities.Thread;
 import com.example.demo.repositories.ThreadRepo;
 import com.example.demo.services.ThreadService;
@@ -24,6 +26,12 @@ public class ThreadController {
     @GetMapping
     public ResponseEntity<List<Thread>> getAllThreads(){
         return ResponseEntity.ok(threadService.findAll());
+    }
+
+    @GetMapping("/getThreadsByCategoryId/{id}")
+    public ResponseEntity<List<Thread>> getThreadsByCategoryId(@PathVariable String id){
+        System.out.println("test"+ id);
+        return ResponseEntity.ok(threadService.findByCategoryId(id));
     }
 
 

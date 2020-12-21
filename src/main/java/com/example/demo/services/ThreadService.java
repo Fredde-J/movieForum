@@ -32,4 +32,8 @@ public class ThreadService {
     public List<Thread> findAll() {
         return threadRepo.findAll();
     }
+
+    public List<Thread> findByCategoryId(String id) {
+    return threadRepo.findByCategoryId(id);
+    }
 }
