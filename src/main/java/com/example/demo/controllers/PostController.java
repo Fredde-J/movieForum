@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/posts")
 public class PostController {
@@ -18,6 +20,11 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<Post> getThreadById(@PathVariable String id){
         return ResponseEntity.ok(postService.findByid(id));
+    }
+
+    @GetMapping("/getPostsByThreadId/{id}")
+    public ResponseEntity<List<Post>> getPostsByThreadId(@PathVariable String id){
+        return ResponseEntity.ok(postService.findByThreadId(id));
     }
 
     @PostMapping
