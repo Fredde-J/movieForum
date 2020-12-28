@@ -15,8 +15,7 @@ import {
 const PostPage = () => {
   const [posts, setPosts] = useState(null);
   const [answer, setAnswers] = useState(null);
-  let { id } = useParams();
-  let {thread} = useParams();
+  let { id } = useParams()
 
   const getPosts = async () => {
     let res = await fetch(`/api/v1/posts/getPostsByThreadId/` + id);
@@ -36,7 +35,7 @@ const PostPage = () => {
     let postBody = {
       message: answer,
       timestamp: Date.now(),
-      thread: {id: id}
+      thread:  posts[0].thread
     }
 
     let response = await fetch("/api/v1/posts", {
