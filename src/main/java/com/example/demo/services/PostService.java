@@ -1,5 +1,6 @@
 package com.example.demo.services;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Thread;
 import com.example.demo.repositories.PostRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +13,17 @@ import java.util.List;
 public class PostService {
     @Autowired
     PostRepo postRepo;
+    @Autowired
+    ThreadService threadService;
 
     public Post findByid(String id) {
         return postRepo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"post not found with id:"+ id));
     }
 
     public Post save(Post post) {
+        Thread thread = threadService.findByid(post.getThread().getId());
+        System.out.println(thread);
+        post.setThread(thread);
         return postRepo.save(post);
     }
 

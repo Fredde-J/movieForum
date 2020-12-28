@@ -28,9 +28,10 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> saveTread(@RequestBody Post post){
+    public ResponseEntity<Post> savePost(@RequestBody Post post){
         return ResponseEntity.ok(postService.save(post));
     }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteThread(@PathVariable String id){
