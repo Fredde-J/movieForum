@@ -1,4 +1,5 @@
 import React, {useState,useEffect} from "react";
+import { useParams,useHistory } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -8,10 +9,10 @@ import {
 
 const PostPage = () => {
     const [posts, setPosts] = useState(null);
+    let { id } = useParams();
 
     const getPosts = async () =>{
-            let ThreadId = "5fde02b4d37ef9422b037f64"
-            let res = await fetch(`api/v1/posts/getPostsByThreadId/`+ThreadId);
+            let res = await fetch(`/api/v1/posts/getPostsByThreadId/`+id);
             console.log(res)
             try {
               res = await res.json();

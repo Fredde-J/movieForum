@@ -18,7 +18,7 @@ function App() {
           <Route exact path = "/threads/:id">
           <ThreadPage></ThreadPage>
           </Route>
-          <Route exact path = "/posts">
+          <Route exact path = "/posts/:id">
           <PostPage></PostPage>
           </Route>
         </Switch>

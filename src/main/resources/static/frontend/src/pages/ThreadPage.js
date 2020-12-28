@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
+
 import {
   Card,
   CardBody,
@@ -10,6 +11,7 @@ import {
 const ThreadPage = () => {
     const [threads, setThreads] = useState(null);
     let { id } = useParams();
+    let history = useHistory()
 
     const getThreads = async () =>{
       let res = await fetch("/api/v1/threads/getThreadsByCategoryId/"+id);
@@ -21,6 +23,12 @@ const ThreadPage = () => {
               console.log(e)
               console.error("Faild to fetch threads");
             }
+        }
+
+        const goToPosts = (thread)=>{
+          console.log(thread.id);
+          history.push("/posts/"+thread.id)
+
         }
 
        
@@ -37,7 +45,7 @@ const ThreadPage = () => {
         <CardBody>
           {threads&&
           threads.map((thread, i)=> {
-            return  <Button  key={i}  block size="lg" >{thread.title}</Button>
+            return  <Button onClick={()=>{goToPosts(thread)}} key={i}  block size="lg" >{thread.title}</Button>
           })}
          
         </CardBody>
