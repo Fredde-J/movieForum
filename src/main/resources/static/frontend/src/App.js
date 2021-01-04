@@ -3,14 +3,18 @@ import { Switch, Route, BrowserRouter } from "react-router-dom";
 import Home from './pages/Home'
 import ThreadPage from './pages/ThreadPage'
 import PostPage from './pages/PostsPage'
-import './css/style.css';
 import Header from './components/Header'
+import LoginPage from './pages/LoginPage'
+import UserContextProvider from './contexts/UserContext'
+import './css/style.css';
+
 
 
 function App() {
   return (
     <BrowserRouter>
     <div className="App">
+      <UserContextProvider>
       <Header/>
       <main className="container">
         <Switch>
@@ -23,9 +27,12 @@ function App() {
           <Route exact path = "/posts/:id">
           <PostPage></PostPage>
           </Route>
+          <Route exact path = "/login">
+          <LoginPage></LoginPage>
+          </Route>
         </Switch>
-     
       </main>
+      </UserContextProvider>
     </div>
     </BrowserRouter>
   );

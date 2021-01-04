@@ -25,16 +25,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByEmail(username);
         if(user == null) {
             throw new UsernameNotFoundException("Username " + username + " not found");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(), getGrantedAuthorities(user));
     }
     private Collection<GrantedAuthority> getGrantedAuthorities(User user) {
@@ -50,6 +47,7 @@ public class MyUserDetailsService implements UserDetailsService {
     }
     public User getCurrentUser() {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(email);
         User currentUser = userService.findByEmail(email);
         if(currentUser == null){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");

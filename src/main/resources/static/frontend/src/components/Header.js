@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
+import { useHistory } from "react-router-dom";
 import {  Collapse,
     Navbar,
     NavbarToggler,
@@ -7,11 +8,24 @@ import {  Collapse,
     NavItem,
     NavLink,
     NavbarText } from 'reactstrap';
+import {UserContext} from '../contexts/UserContext'
 
-const Header = (props) => {
+const Header = () => {
+    let history = useHistory();
     const [isOpen, setIsOpen] = useState(false);
-
     const toggle = () => setIsOpen(!isOpen);
+    const {user} = useContext(UserContext)
+
+    const goToLoginPage = ()=>{
+      history.push("/login")
+
+    }
+
+    const logout = ()=>{
+
+    }
+
+   
   
     return (
       <div>
@@ -20,9 +34,14 @@ const Header = (props) => {
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-              </NavItem>
+              {user ? ( <NavItem onClick={logout} >
+               Logga ut
+              </NavItem>):
+              ( 
+                <NavItem onClick={goToLoginPage} >
+               Logga in
+              </NavItem>)}
+             
             </Nav>
             <NavbarText>Simple Text</NavbarText>
           </Collapse>
