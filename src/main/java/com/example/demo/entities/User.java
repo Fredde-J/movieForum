@@ -31,7 +31,7 @@ public class User {
     public User() {
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

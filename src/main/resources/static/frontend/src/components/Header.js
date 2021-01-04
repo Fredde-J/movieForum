@@ -6,10 +6,6 @@ import {  Collapse,
     Nav,
     NavItem,
     NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     NavbarText } from 'reactstrap';
 
 const Header = (props) => {
