@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useHistory } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -8,7 +9,6 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 const LoginPage = () => {
@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState(null);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
   const {fetchUser}  = useContext(UserContext);
+  const history = useHistory();
 
   const performLogin = async (e) => {
     e.preventDefault();
@@ -37,6 +38,7 @@ const LoginPage = () => {
       } else {
         fetchUser()
         setErrorMessageShown(false);
+        history.push("/")
       }
     
   };
@@ -65,7 +67,7 @@ const LoginPage = () => {
             <Input
           required
           className="noBorder"
-          type={"password"}
+          type="password"
           placeholder="Lösenord"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -75,7 +77,7 @@ const LoginPage = () => {
           <FormGroup >
             {errorMessageShown ? (
               <div className=" mb-2 text-center font-weight-bold">
-                Felaktigt användarnamn eller lösenord{" "}
+                Felaktigt användarnamn eller lösenord
               </div>
             ) : (
               ""

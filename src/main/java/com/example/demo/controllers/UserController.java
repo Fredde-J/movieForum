@@ -2,9 +2,13 @@ package com.example.demo.controllers;
 
 import com.example.demo.entities.User;
 import com.example.demo.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,6 +41,17 @@ public class UserController {
     public ResponseEntity<User> findUserByEmail(@PathVariable String email) {
         System.out.println(email);
         return ResponseEntity.ok(userService.findByEmail(email));
+    }
+    @GetMapping("/logout")
+    @Operation( summary = "Logout the current authenticated User" )
+    private ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                new SecurityContextLogoutHandler().logout(request, response, authentication);
+            }
+        } catch (Exception err) {}
+        return new ResponseEntity<>("Logged out",HttpStatus.RESET_CONTENT);
     }
     @PostMapping
     public ResponseEntity<User> saveUser(@Validated @RequestBody User user) {

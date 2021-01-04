@@ -14,15 +14,17 @@ const Header = () => {
     let history = useHistory();
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const {user} = useContext(UserContext)
+    const {user,setUser} = useContext(UserContext)
 
     const goToLoginPage = ()=>{
       history.push("/login")
 
     }
 
-    const logout = ()=>{
-
+    const logout = async ()=>{
+      await fetch("/api/v1/users/logout");
+      setUser(null);
+      history.push("/");
     }
 
    

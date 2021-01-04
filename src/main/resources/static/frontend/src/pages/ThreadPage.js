@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import {UserContext} from '../contexts/UserContext'
 
 import {
   Card,
@@ -20,7 +21,8 @@ const ThreadPage = () => {
   const [threads, setThreads] = useState(null);
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState(null);
-  const [message,setMessage] = useState(null)
+  const [message,setMessage] = useState(null);
+  const {user} = useContext(UserContext)
 
   let { id } = useParams();
   let history = useHistory();
@@ -93,6 +95,10 @@ const ThreadPage = () => {
     <div>
       <Card>
         <CardBody>
+          {user ? (<Button onClick={toggle} block size="lg" color="warning">
+            Skapa en tråd
+          </Button>):(<p></p>)}
+        
           {threads &&
             threads.map((thread, i) => {
               return (
@@ -108,9 +114,6 @@ const ThreadPage = () => {
                 </Button>
               );
             })}
-          <Button onClick={toggle} block size="lg" color="warning">
-            Skapa en tråd
-          </Button>
           <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle}>Skapa Tråd</ModalHeader>
             <ModalBody>

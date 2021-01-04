@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   Card,
@@ -11,10 +11,12 @@ import {
   Input,
   FormText,
 } from "reactstrap";
+import {UserContext} from '../contexts/UserContext'
 
 const PostPage = () => {
   const [posts, setPosts] = useState(null);
   const [answer, setAnswers] = useState(null);
+  const {user} = useContext(UserContext)
   let { id } = useParams()
 
   const getPosts = async () => {
@@ -71,10 +73,16 @@ const PostPage = () => {
         })}
       <Form onSubmit={postAnswer}>
         <FormGroup>
+          {user ? (
+          <div>
           <Label for="exampleText">Svara här:</Label>
           <Input type="textarea" name="text" id="exampleText" onChange={(e)=> setAnswers(e.target.value)} />
+          <Button>Skicka</Button>
+          </div>):(
+            <p>logga in för att svara</p>
+          )}
         </FormGroup>
-        <Button>Skicka</Button>
+        
       </Form>
     </div>
   );
