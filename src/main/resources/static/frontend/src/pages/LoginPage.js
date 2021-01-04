@@ -14,8 +14,10 @@ import {
 const LoginPage = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState(null);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
-  const {fetchUser}  = useContext(UserContext);
+  const [toggle, setToggle] = useState(false);
+  const { fetchUser } = useContext(UserContext);
   const history = useHistory();
 
   const performLogin = async (e) => {
@@ -26,67 +28,128 @@ const LoginPage = () => {
       "&password=" +
       encodeURIComponent(password);
 
+      console.log(credentials);
+
     let response = await fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: credentials,
     });
-    console.log(response)
+    console.log(response);
 
     if (response.url.includes("error")) {
-        setErrorMessageShown(true);
-      } else {
-        fetchUser()
-        setErrorMessageShown(false);
-        history.push("/")
-      }
-    
+      setErrorMessageShown(true);
+    } else {
+      fetchUser();
+      setErrorMessageShown(false);
+      history.push("/");
+    }
   };
+
+  const createAccount = async (e)=>{
+    e.preventDefault();
+
+    let userInformation = {
+      email: email,
+      password: password,
+      username: username,
+      roles: ["USER"]
+    };
+
+    let response = await fetch("/api/v1/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userInformation),
+    });
+
+    if (response.status === 400) {
+      setErrorMessageShown(true);
+    } else {
+      setErrorMessageShown(false);
+      await performLogin(e)
+    }
+  }
 
   return (
     <Card>
       <CardBody>
-        <Form onSubmit={performLogin}>
-          <FormGroup >
-            <Label for="emailAddress">Email</Label>
-            <Input
-              required
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FormGroup>
+        {!toggle ? (
+          <Form onSubmit={performLogin}>
+            <FormGroup>
+              <Label for="emailAddress">Email</Label>
+              <Input
+                required
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormGroup>
 
-          <FormGroup >
-            <Label
-              for="password"
-            >
-              Lösenord
-            </Label>
-            <Input
-          required
-          className="noBorder"
-          type="password"
-          placeholder="Lösenord"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-          </FormGroup>
+            <FormGroup>
+              <Label for="password">Lösenord</Label>
+              <Input
+                required
+                className="noBorder"
+                type="password"
+                placeholder="Lösenord"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormGroup>
 
-          <FormGroup >
-            {errorMessageShown ? (
-              <div className=" mb-2 text-center font-weight-bold">
-                Felaktigt användarnamn eller lösenord
-              </div>
-            ) : (
-              ""
-            )}
-            <Button >
-              Logga in
-            </Button>
-          </FormGroup>
-        </Form>
+            <FormGroup>
+              {errorMessageShown ? (
+                <div className=" mb-2 text-center font-weight-bold">
+                  Felaktigt användarnamn eller lösenord
+                </div>
+              ) : (
+                ""
+              )}
+
+              <Button>Logga in</Button>
+            </FormGroup>
+            <p onClick={() => setToggle(true)}>Skapa konto</p>
+          </Form>
+        ) : (
+          <Form onSubmit={createAccount}>
+            <FormGroup>
+              <Label for="emailAddress">Email</Label>
+              <Input
+                required
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="username">Användarnamn</Label>
+              <Input
+                required
+                className="noBorder"
+                type="username"
+                placeholder="Användarnamn"
+                value = {username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="password">Lösenord</Label>
+              <Input
+                required
+                className="noBorder"
+                type="password"
+                placeholder="Lösenord"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormGroup>
+            <Button>Skapa Konto</Button>
+          </Form>
+        )}
       </CardBody>
     </Card>
   );
