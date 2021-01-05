@@ -39,6 +39,13 @@ public class ThreadController {
     public ResponseEntity<Thread> saveTread(@RequestBody Thread thread){
         return ResponseEntity.ok(threadService.save(thread));
     }
+
+    @PutMapping("/id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateThread(@PathVariable String id, @RequestBody Thread thread){
+        threadService.updateThread(id,thread);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteThread(@PathVariable String id){

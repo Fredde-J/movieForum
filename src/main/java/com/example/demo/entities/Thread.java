@@ -16,11 +16,14 @@ public class Thread {
     private Long timestamp;
     @DBRef
     private Category category;
+    @DBRef
+    private User user;
 
 
-    public Thread(String title, Long timestamp, Category category) {
+    public Thread(String title, Long timestamp, Category category, User user) {
         this.title = title;
         this.timestamp = timestamp;
         this.category=category;
+        this.user=user;
     }
 }
