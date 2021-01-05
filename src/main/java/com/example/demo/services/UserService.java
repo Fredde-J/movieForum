@@ -63,7 +63,6 @@ public class UserService {
 
 
     public User getCurrentUser() {
-        System.out.println("test");
         return myUserDetailsService.getCurrentUser();
     }
 }

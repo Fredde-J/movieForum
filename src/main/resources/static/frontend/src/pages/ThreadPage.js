@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import {UserContext} from '../contexts/UserContext'
+import { UserContext } from "../contexts/UserContext";
 
 import {
   Card,
@@ -21,8 +21,8 @@ const ThreadPage = () => {
   const [threads, setThreads] = useState(null);
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState(null);
-  const [message,setMessage] = useState(null);
-  const {user} = useContext(UserContext)
+  const [message, setMessage] = useState(null);
+  const { user } = useContext(UserContext);
 
   let { id } = useParams();
   let history = useHistory();
@@ -45,42 +45,52 @@ const ThreadPage = () => {
   };
 
   const addThread = async (e) => {
-    e.preventDefault();
-    console.log(threads[0])
-    let thread = {
-      title:title,
-      timestamp: Date.now(),
-      category: threads[0].category
+    
+    let category;
+    if (!threads[0]) {
+      let res = await fetch("/api/v1/categories/" + id);
+      console.log(res);
+      try {
+        res = await res.json();
+        category = res;
+      } catch (e) {
+        console.log(e);
+        console.error("Faild to fetch threads");
+      }
+    }else{
+      category = threads[0].category
     }
-
-   
+    let thread = {
+      title: title,
+      timestamp: Date.now(),
+      category: category,
+    };
 
     let response = await fetch("/api/v1/threads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(thread),
-    })
-    console.log(response)
-    if(response.status==200){
-      try{
+    });
+    console.log(response);
+    if (response.status == 200) {
+      try {
         thread = await response.json();
-      }catch(e){
-        console.error(e)
+      } catch (e) {
+        console.error(e);
       }
-      console.log("thread", thread)
+      console.log("thread", thread);
       let postBody = {
         message: message,
         timestamp: Date.now(),
-        thread:  thread
-      }
+        thread: thread,
+      };
       response = await fetch("/api/v1/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postBody),
-      })  
-      console.log(response)
+      });
+      console.log(response);
     }
-    
   };
 
   const toggle = () => setModal(!modal);
@@ -95,10 +105,14 @@ const ThreadPage = () => {
     <div>
       <Card>
         <CardBody>
-          {user ? (<Button onClick={toggle} block size="lg" color="warning">
-            Skapa en tråd
-          </Button>):(<p></p>)}
-        
+          {user ? (
+            <Button onClick={toggle} block size="lg" color="warning">
+              Skapa en tråd
+            </Button>
+          ) : (
+            <p></p>
+          )}
+
           {threads &&
             threads.map((thread, i) => {
               return (
@@ -120,20 +134,31 @@ const ThreadPage = () => {
               <Form onSubmit={addThread}>
                 <FormGroup>
                   <Label>Titel</Label>
-                  <Input required type="title" name="title" onChange={(e)=>{setTitle(e.target.value)}} />
+                  <Input
+                    required
+                    type="title"
+                    name="title"
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
+                  />
                 </FormGroup>
                 <FormGroup>
                   <Label for="exampleText">Skriv ditt inlägg här </Label>
-                  <Input required type="textarea" name="text" id="exampleText" onChange={(e)=>{setMessage(e.target.value)}} />
+                  <Input
+                    required
+                    type="textarea"
+                    name="text"
+                    id="exampleText"
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                    }}
+                  />
                 </FormGroup>
-                <Button color="primary">
-              Skapa tråd
-              </Button>
+                <Button color="primary">Skapa tråd</Button>
               </Form>
             </ModalBody>
-            <ModalFooter>
-              
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </Modal>
         </CardBody>
       </Card>

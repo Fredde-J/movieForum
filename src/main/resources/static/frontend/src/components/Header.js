@@ -32,20 +32,24 @@ const Header = () => {
     return (
       <div>
         <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarBrand href="/">Film Forum</NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              {user ? ( <NavItem onClick={logout} >
+              {user ? ( 
+              <div> <NavItem onClick={logout} >
                Logga ut
-              </NavItem>):
+              </NavItem>
+              <NavbarText>{user.username}</NavbarText>
+              </div>)
+              :
               ( 
                 <NavItem onClick={goToLoginPage} >
                Logga in
               </NavItem>)}
              
             </Nav>
-            <NavbarText>Simple Text</NavbarText>
+            
           </Collapse>
         </Navbar>
       </div>

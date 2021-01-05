@@ -25,7 +25,6 @@ public class UserController {
     @GetMapping("/whoami")
     public ResponseEntity<User> whoami(){
         User user = userService.getCurrentUser();
-        System.out.println(user);
         if(user==null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

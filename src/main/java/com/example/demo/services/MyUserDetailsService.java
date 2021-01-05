@@ -47,7 +47,6 @@ public class MyUserDetailsService implements UserDetailsService {
     }
     public User getCurrentUser() {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(email);
         User currentUser = userService.findByEmail(email);
         if(currentUser == null){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");

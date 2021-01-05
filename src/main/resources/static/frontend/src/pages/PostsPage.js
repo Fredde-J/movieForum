@@ -32,8 +32,7 @@ const PostPage = () => {
   };
 
   const postAnswer = async (e) => {
-    e.preventDefault();
-
+    
     let postBody = {
       message: answer,
       timestamp: Date.now(),
@@ -64,7 +63,7 @@ const PostPage = () => {
       {posts &&
         posts.map((post, i) => {
           return (
-            <Card>
+            <Card className="mt-2">
               <CardBody>
                 <CardText> {post.message} </CardText>
               </CardBody>
