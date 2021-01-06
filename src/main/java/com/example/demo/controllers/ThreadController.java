@@ -40,9 +40,10 @@ public class ThreadController {
         return ResponseEntity.ok(threadService.save(thread));
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateThread(@PathVariable String id, @RequestBody Thread thread){
+        System.out.println(thread);
         threadService.updateThread(id,thread);
     }
 

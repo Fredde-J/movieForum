@@ -6,7 +6,6 @@ import {  Collapse,
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
     NavbarText } from 'reactstrap';
 import {UserContext} from '../contexts/UserContext'
 

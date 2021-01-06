@@ -14,7 +14,9 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
+  Row,
+  CardText,
+  Col,
 } from "reactstrap";
 
 const ThreadPage = () => {
@@ -22,10 +24,12 @@ const ThreadPage = () => {
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState(null);
   const [message, setMessage] = useState(null);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   let { id } = useParams();
   let history = useHistory();
+
+  const toggle = () => setModal(!modal);
 
   const getThreads = async () => {
     let res = await fetch("/api/v1/threads/getThreadsByCategoryId/" + id);
@@ -45,11 +49,10 @@ const ThreadPage = () => {
   };
 
   const addThread = async (e) => {
-    
+    e.preventDefault();
     let category;
     if (!threads[0]) {
       let res = await fetch("/api/v1/categories/" + id);
-      console.log(res);
       try {
         res = await res.json();
         category = res;
@@ -57,13 +60,15 @@ const ThreadPage = () => {
         console.log(e);
         console.error("Faild to fetch threads");
       }
-    }else{
-      category = threads[0].category
+    } else {
+      category = threads[0].category;
     }
+
     let thread = {
       title: title,
       timestamp: Date.now(),
       category: category,
+      isLocked: false,
     };
 
     let response = await fetch("/api/v1/threads", {
@@ -71,7 +76,7 @@ const ThreadPage = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(thread),
     });
-    console.log(response);
+
     if (response.status == 200) {
       try {
         thread = await response.json();
@@ -89,43 +94,97 @@ const ThreadPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postBody),
       });
-      console.log(response);
+    }
+    toggle();
+    getThreads();
+  };
+
+  const editorOptions = (thread) => {
+    if (user) {
+      if (user.roles.includes("EDITOR") || user.roles.includes("ADMIN")) {
+        return (
+          <Row >
+            <Col>
+              <Label check>
+                <Input type="checkbox" checked={thread.isLocked} onClick={() => {
+                lockThread(thread);
+              }} />
+                lås
+              </Label>
+            </Col>
+            <Col>
+            <p className="text-danger text-center" onClick={()=>{deleteThread(thread)}}> Radera </p>
+            </Col>
+           
+          </Row>
+        );
+      }
     }
   };
 
-  const toggle = () => setModal(!modal);
+  const lockThread = async (thread) => {
+    thread.isLocked = !thread.isLocked;
+    console.log(thread.isLocked);
+    let response = await fetch("/api/v1/threads/" + thread.id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(thread),
+    });
+    if (response.status == 204) {
+      getThreads();
+    }
+  };
+
+  const deleteThread = async (thread) => {
+    let response = await fetch("/api/v1/threads/" + thread.id, {
+      method: "DELETE",
+    });
+    if (response.status == 204) {
+      getThreads();
+    }else{
+      console.error(response)
+    }
+  }
 
   useEffect(() => {
-    console.log("id:", id);
     getThreads();
-    console.log(threads);
   }, []);
 
   return (
-    <div>
       <Card>
+        <Row >
         <CardBody>
           {user ? (
-            <Button onClick={toggle} block size="lg" color="warning">
+            <Button onClick={toggle} block size="lg" color="warning" className="mb-3">
               Skapa en tråd
             </Button>
           ) : (
-            <p></p>
+            ""
           )}
 
           {threads &&
             threads.map((thread, i) => {
               return (
-                <Button
-                  onClick={() => {
-                    goToPosts(thread);
-                  }}
-                  key={i}
-                  block
-                  size="lg"
-                >
-                  {thread.title}
-                </Button>
+                <div>
+                  {thread.isLocked ? (
+                    <Button disabled key={i} block size="lg">
+                      {thread.title} (låst)
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        goToPosts(thread);
+                      }}
+                      key={i}
+                      block
+                      size="lg"
+                    >
+                      {thread.title}
+                    </Button>
+                  )}
+
+                  {editorOptions(thread)}
+                </div>
               );
             })}
           <Modal isOpen={modal} toggle={toggle}>
@@ -161,8 +220,9 @@ const ThreadPage = () => {
             <ModalFooter></ModalFooter>
           </Modal>
         </CardBody>
+        </Row>
       </Card>
-    </div>
+    
   );
 };
 export default ThreadPage;

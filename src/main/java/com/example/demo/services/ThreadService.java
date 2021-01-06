@@ -37,15 +37,19 @@ public class ThreadService {
         if(!threadRepo.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("could not find thread by id:" + id));
         }
+        /*
        if(!thread.getUser().getRoles().contains("EDITOR") && myUserDetailsService.checkUserRole("ADMIN")) {
         List<String> roles = thread.getUser().getRoles();
         roles.add("EDITOR");
         thread.getUser().setRoles(roles);
         }
 
-       if(!thread.getUser().getId().equals(myUserDetailsService.getCurrentUser().getId()) || !myUserDetailsService.checkUserRole("ADMIN") ){
+
+       if(!myUserDetailsService.checkUserRole("EDITOR") || !myUserDetailsService.checkUserRole("ADMIN") ){
            throw new ResponseStatusException(HttpStatus.FORBIDDEN, String.format("you need to be editor or admin for this thread to update it"));
        }
+       */
+
        thread.setId(id);
        threadRepo.save(thread);
     }

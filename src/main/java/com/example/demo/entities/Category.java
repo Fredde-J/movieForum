@@ -14,10 +14,13 @@ public class Category {
     @Id
     private String id;
     private String name;
+    @DBRef
+    private User user;
 
 
-    public Category(String name) {
+    public Category(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 
 

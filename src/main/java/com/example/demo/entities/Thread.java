@@ -18,12 +18,14 @@ public class Thread {
     private Category category;
     @DBRef
     private User user;
+    private Boolean isLocked;
 
 
-    public Thread(String title, Long timestamp, Category category, User user) {
+    public Thread(String title, Long timestamp, Category category, User user, boolean isLocked) {
         this.title = title;
         this.timestamp = timestamp;
-        this.category=category;
-        this.user=user;
+        this.category = category;
+        this.user = user;
+        this.isLocked = isLocked;
     }
 }
