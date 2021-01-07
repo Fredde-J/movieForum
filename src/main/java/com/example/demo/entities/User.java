@@ -8,17 +8,22 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.*;
 import java.util.List;
 @Data
 public class User {
 
     @Id
     private String id;
+    @Size(min = 4, max = 15 )
     private String username;
-    @Indexed(unique=true)
+    @NotEmpty
+    @Email
     private String email;
+    @Size(min = 4, max = 15 )
     private String password;
-    private List<String> roles;
+    @NotEmpty
+    private List<@NotEmpty String> roles;
 
 
     public User(String username, String email, String password,List<String> roles) {

@@ -1,8 +1,11 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Category;
 import com.example.demo.entities.Thread;
 import com.example.demo.entities.User;
+import com.example.demo.repositories.CategoryRepo;
 import com.example.demo.repositories.ThreadRepo;
+import com.example.demo.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,10 @@ public class ThreadService {
     ThreadRepo threadRepo;
     @Autowired
     MyUserDetailsService myUserDetailsService;
+    @Autowired
+    UserRepo userRepo;
+    @Autowired
+    CategoryRepo categoryRepo;
 
     public Thread findByid(String id) {
         return threadRepo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"thread not found with id:"+ id));
@@ -29,7 +36,11 @@ public class ThreadService {
     return threadRepo.findByCategoryId(id);
     }
 
-    public Thread save(Thread thread) {
+    public Thread save(Thread thread)
+    {
+        if(!userRepo.existsById(thread.getUser().getId()) || !categoryRepo.existsById(thread.getCategory().getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("could not find user or category in database"));
+        }
         return threadRepo.save(thread);
     }
 

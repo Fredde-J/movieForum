@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
-
 import {
   Card,
   CardBody,
@@ -15,7 +14,6 @@ import {
   Label,
   Input,
   Row,
-  CardText,
   Col,
 } from "reactstrap";
 
@@ -24,7 +22,7 @@ const ThreadPage = () => {
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState(null);
   const [message, setMessage] = useState(null);
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   let { id } = useParams();
   let history = useHistory();
@@ -57,8 +55,8 @@ const ThreadPage = () => {
         res = await res.json();
         category = res;
       } catch (e) {
-        console.log(e);
-        console.error("Faild to fetch threads");
+        console.error(e);
+        console.error("Faild fetch categories");
       }
     } else {
       category = threads[0].category;
@@ -68,6 +66,7 @@ const ThreadPage = () => {
       title: title,
       timestamp: Date.now(),
       category: category,
+      user:user,
       isLocked: false,
     };
 
@@ -94,6 +93,9 @@ const ThreadPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postBody),
       });
+    }
+    else{
+      console.error(await response.json())
     }
     toggle();
     getThreads();

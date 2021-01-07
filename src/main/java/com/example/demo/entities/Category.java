@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,7 +15,9 @@ import java.util.List;
 public class Category {
     @Id
     private String id;
+    @Size(min = 3, max = 20 )
     private String name;
+    @Valid
     @DBRef
     private User user;
 
