@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -28,47 +29,56 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR"})
     @GetMapping("/whoami")
-    public ResponseEntity<User> whoami(){
-        User user = userService.getCurrentUser();
-        if(user==null){
+    public ResponseEntity<User> whoami() {
+        var user = userService.getCurrentUser();
+        if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(user);
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable String id) {
         System.out.println(id);
         return ResponseEntity.ok(userService.findById(id));
     }
+
+    @Secured("ROLE_ADMIN")
     @GetMapping("/email/{email}")
     public ResponseEntity<User> findUserByEmail(@PathVariable String email) {
         System.out.println(email);
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR"})
     @GetMapping("/logout")
-    @Operation( summary = "Logout the current authenticated User" )
-    private ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response){
-        try{
+    @Operation(summary = "Logout the current authenticated User")
+    private ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null) {
                 new SecurityContextLogoutHandler().logout(request, response, authentication);
             }
-        } catch (Exception err) {}
-        return new ResponseEntity<>("Logged out",HttpStatus.RESET_CONTENT);
+        } catch (Exception err) {
+        }
+        return new ResponseEntity<>("Logged out", HttpStatus.RESET_CONTENT);
     }
+
     @PostMapping
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.save(user));
     }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUser(@PathVariable String id, @Valid @RequestBody User user)
-    {
+    public void updateUser(@PathVariable String id, @Valid @RequestBody User user) {
         userService.update(id, user);
     }
 
+    @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_EDITOR"})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable String id) {

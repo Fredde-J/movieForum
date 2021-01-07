@@ -18,9 +18,10 @@ public class User {
     @Size(min = 4, max = 15 )
     private String username;
     @NotEmpty
+    @Size(min = 4, max = 30 )
     @Email
     private String email;
-    @Size(min = 4, max = 15 )
+    @Size(min = 6, max = 20 )
     private String password;
     @NotEmpty
     private List<@NotEmpty String> roles;

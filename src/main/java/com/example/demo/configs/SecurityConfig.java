@@ -33,14 +33,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/threads/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/posts/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/categories/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/users/**").permitAll()
+                .antMatchers("/api/v1/**").authenticated()
                 .and()
                 .httpBasic().authenticationEntryPoint(entryPoint)
                 .and()
                 .formLogin().loginPage("/login");
-               // .and()
-               // .logout(l -> l.logoutSuccessUrl("/"));
 
         httpSecurity.cors().disable();
     }

@@ -82,11 +82,11 @@ const ThreadPage = () => {
       } catch (e) {
         console.error(e);
       }
-      console.log("thread", thread);
       let postBody = {
         message: message,
         timestamp: Date.now(),
         thread: thread,
+        user: user
       };
       response = await fetch("/api/v1/posts", {
         method: "POST",
@@ -103,12 +103,13 @@ const ThreadPage = () => {
 
   const editorOptions = (thread) => {
     if (user) {
-      if (user.roles.includes("EDITOR") || user.roles.includes("ADMIN")) {
+      if (user.roles.includes("EDITOR")&& user.id==thread.category.user.id || user.roles.includes("ADMIN")) {
+
         return (
           <Row >
             <Col>
               <Label check>
-                <Input type="checkbox" checked={thread.isLocked} onClick={() => {
+                <Input type="checkbox" readOnly checked={thread.isLocked} onClick={() => {
                 lockThread(thread);
               }} />
                 lås
@@ -169,7 +170,7 @@ const ThreadPage = () => {
               return (
                 <div>
                   {thread.isLocked ? (
-                    <Button disabled key={i} block size="lg">
+                    <Button disabled key={i} block size="lg" className="mb-1">
                       {thread.title} (låst)
                     </Button>
                   ) : (
@@ -179,6 +180,7 @@ const ThreadPage = () => {
                       }}
                       key={i}
                       block
+                      className="mb-1"
                       size="lg"
                     >
                       {thread.title}
@@ -197,6 +199,8 @@ const ThreadPage = () => {
                   <Label>Titel</Label>
                   <Input
                     required
+                    minLength="3"
+                    maxLength="20"
                     type="title"
                     name="title"
                     onChange={(e) => {
@@ -208,6 +212,8 @@ const ThreadPage = () => {
                   <Label for="exampleText">Skriv ditt inlägg här </Label>
                   <Input
                     required
+                    minLength="2"
+                    maxLength="1000"
                     type="textarea"
                     name="text"
                     id="exampleText"

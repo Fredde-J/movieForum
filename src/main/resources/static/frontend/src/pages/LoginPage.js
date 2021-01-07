@@ -79,6 +79,8 @@ const LoginPage = () => {
               <Label for="emailAddress">Email</Label>
               <Input
                 required
+                minLength="4"
+                maxLength="30"
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -90,6 +92,8 @@ const LoginPage = () => {
               <Label for="password">Lösenord</Label>
               <Input
                 required
+                minLength="6"
+                maxLength="20"
                 className="noBorder"
                 type="password"
                 placeholder="Lösenord"
@@ -117,6 +121,8 @@ const LoginPage = () => {
               <Label for="emailAddress">Email</Label>
               <Input
                 required
+                minLength="3"
+                maxLength="50"
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -128,6 +134,8 @@ const LoginPage = () => {
               <Label for="username">Användarnamn</Label>
               <Input
                 required
+                minLength="4"
+                maxLength="15"
                 className="noBorder"
                 type="username"
                 placeholder="Användarnamn"
@@ -140,6 +148,8 @@ const LoginPage = () => {
               <Label for="password">Lösenord</Label>
               <Input
                 required
+                minLength="6"
+                maxLength="20"
                 className="noBorder"
                 type="password"
                 placeholder="Lösenord"

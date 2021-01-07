@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -9,15 +9,14 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
-import {UserContext} from '../contexts/UserContext'
+import { UserContext } from "../contexts/UserContext";
 
 const PostPage = () => {
   const [posts, setPosts] = useState(null);
-  const [answer, setAnswers] = useState(null);
-  const {user} = useContext(UserContext)
-  let { id } = useParams()
+  const [answer, setAnswer] = useState(null);
+  const { user } = useContext(UserContext);
+  let { id } = useParams();
 
   const getPosts = async () => {
     let res = await fetch(`/api/v1/posts/getPostsByThreadId/` + id);
@@ -32,31 +31,30 @@ const PostPage = () => {
   };
 
   const postAnswer = async (e) => {
-    
+    e.preventDefault();
     let postBody = {
       message: answer,
       timestamp: Date.now(),
-      thread:  posts[0].thread
-    }
+      thread: posts[0].thread,
+      user: user,
+    };
 
     let response = await fetch("/api/v1/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(postBody),
-    })
-
-    console.log(response)
-
+    });
+    if (response.status == 200) {
+      setAnswer(null);
+      getPosts();
+    } else {
+      console.error(await response.json());
+    }
   };
 
   useEffect(() => {
     getPosts();
-    console.log(posts);
   }, []);
-
-  useEffect(() => {
-    console.log(answer);
-  }, [answer]);
 
   return (
     <div>
@@ -65,6 +63,7 @@ const PostPage = () => {
           return (
             <Card className="mt-2">
               <CardBody>
+                <h5>{post.user.username}</h5>
                 <CardText> {post.message} </CardText>
               </CardBody>
             </Card>
@@ -73,15 +72,23 @@ const PostPage = () => {
       <Form onSubmit={postAnswer}>
         <FormGroup>
           {user ? (
-          <div>
-          <Label for="exampleText">Svara här:</Label>
-          <Input type="textarea" name="text" id="exampleText" onChange={(e)=> setAnswers(e.target.value)} />
-          <Button>Skicka</Button>
-          </div>):(
+            <div>
+              <Label for="exampleText">Svara här:</Label>
+              <Input
+                minLength="2"
+                maxLength="1000"
+                required
+                type="textarea"
+                name="text"
+                id="exampleText"
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <Button>Skicka</Button>
+            </div>
+          ) : (
             <p>logga in för att svara</p>
           )}
         </FormGroup>
-        
       </Form>
     </div>
   );

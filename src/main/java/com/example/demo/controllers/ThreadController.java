@@ -1,9 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.Category;
-import com.example.demo.entities.Post;
 import com.example.demo.entities.Thread;
-import com.example.demo.repositories.ThreadRepo;
+
 import com.example.demo.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -35,7 +33,6 @@ public class ThreadController {
 
     @GetMapping("/getThreadsByCategoryId/{id}")
     public ResponseEntity<List<Thread>> getThreadsByCategoryId(@PathVariable String id){
-        System.out.println("test"+ id);
         return ResponseEntity.ok(threadService.findByCategoryId(id));
     }
 
@@ -48,7 +45,6 @@ public class ThreadController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateThread(@PathVariable String id, @Valid @RequestBody Thread thread){
-        System.out.println(thread);
         threadService.updateThread(id,thread);
     }
 

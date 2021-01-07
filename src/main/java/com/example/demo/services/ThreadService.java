@@ -23,6 +23,8 @@ public class ThreadService {
     UserRepo userRepo;
     @Autowired
     CategoryRepo categoryRepo;
+    @Autowired
+    PostService postService;
 
     public Thread findByid(String id) {
         return threadRepo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"thread not found with id:"+ id));
