@@ -31,6 +31,12 @@ public class CategoryController {
     }
 
     @Secured("ROLE_ADMIN")
+    @GetMapping("/availableCategories")
+    public ResponseEntity<List<Category>> getAvailableCategories(){
+        return ResponseEntity.ok(categoryService.getAvailableCategories());
+    }
+
+    @Secured("ROLE_ADMIN")
     @PostMapping()
     public ResponseEntity<Category> postNewCategory(@Valid @RequestBody Category category){
         return ResponseEntity.ok(categoryService.save(category));

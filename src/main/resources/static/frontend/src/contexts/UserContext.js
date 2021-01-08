@@ -12,7 +12,6 @@ const UserContextProvider = (props) => {
     try {
       if (res.ok) {
         res = await res.json();
-        console.log(res)
         setUser(res);
       } else {
         setUser(null);

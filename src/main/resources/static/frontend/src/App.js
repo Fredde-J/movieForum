@@ -6,6 +6,7 @@ import PostPage from './pages/PostsPage'
 import Header from './components/Header'
 import LoginPage from './pages/LoginPage'
 import UserContextProvider from './contexts/UserContext'
+import AdminPage from './pages/AdminPage'
 import './css/style.css';
 
 
@@ -29,6 +30,9 @@ function App() {
           </Route>
           <Route exact path = "/login">
           <LoginPage></LoginPage>
+          </Route>
+          <Route exact path = "/admin">
+          <AdminPage/>
           </Route>
         </Switch>
       </main>

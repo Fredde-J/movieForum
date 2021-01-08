@@ -22,6 +22,14 @@ public class CategoryService {
     return categoryRepo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("no category found by id: "+ id)));
     }
 
+    public List<Category> getAll() {
+        return categoryRepo.findAll();
+    }
+
+    public List<Category> getAvailableCategories() {
+        return categoryRepo.findCategoriesWithoutEditor();
+    }
+
     public Category save(Category category) {
       return categoryRepo.save(category);
     }
@@ -35,6 +43,14 @@ public class CategoryService {
         categoryRepo.save(category);
     }
 
+    public void removeUserFromCategoriesByUserId(String id) {
+       List<Category> categories = categoryRepo.findCategoriesByUserId(id);
+        for (Category category:categories) {
+            category.setUser(null);
+            categoryRepo.save(category);
+        }
+    }
+
     public void deleteById(String id) {
         if (!categoryRepo.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("could not find category by id:" + id));
@@ -42,7 +58,6 @@ public class CategoryService {
         categoryRepo.deleteById(id);
     }
 
-    public List<Category> getAll() {
-        return categoryRepo.findAll();
-    }
+
+
 }

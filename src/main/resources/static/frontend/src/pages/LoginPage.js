@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
-  const [errorMessageShown, setErrorMessageShown] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [toggle, setToggle] = useState(false);
   const { fetchUser } = useContext(UserContext);
   const history = useHistory();
@@ -28,32 +28,29 @@ const LoginPage = () => {
       "&password=" +
       encodeURIComponent(password);
 
-      console.log(credentials);
-
     let response = await fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: credentials,
     });
-    console.log(response);
 
     if (response.url.includes("error")) {
-      setErrorMessageShown(true);
+      setErrorMessage("Fel användarnamn eller lösenord");
     } else {
       fetchUser();
-      setErrorMessageShown(false);
+      setErrorMessage("");
       history.push("/");
     }
   };
 
-  const createAccount = async (e)=>{
+  const createAccount = async (e) => {
     e.preventDefault();
 
     let userInformation = {
       email: email,
       password: password,
       username: username,
-      roles: ["USER"]
+      roles: ["USER"],
     };
 
     let response = await fetch("/api/v1/users", {
@@ -63,12 +60,14 @@ const LoginPage = () => {
     });
 
     if (response.status === 400) {
-      setErrorMessageShown(true);
+      response = await response.json();
+      console.log(response.message);
+      setErrorMessage(response.message);
     } else {
-      setErrorMessageShown(false);
-      await performLogin(e)
+      setErrorMessage("");
+      await performLogin(e);
     }
-  }
+  };
 
   return (
     <Card>
@@ -103,13 +102,9 @@ const LoginPage = () => {
             </FormGroup>
 
             <FormGroup>
-              {errorMessageShown ? (
-                <div className=" mb-2 text-center font-weight-bold">
-                  Felaktigt användarnamn eller lösenord
-                </div>
-              ) : (
-                ""
-              )}
+              <div className=" mb-2 text-center font-weight-bold">
+                {errorMessage}
+              </div>
 
               <Button>Logga in</Button>
             </FormGroup>
@@ -139,7 +134,7 @@ const LoginPage = () => {
                 className="noBorder"
                 type="username"
                 placeholder="Användarnamn"
-                value = {username}
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </FormGroup>
@@ -157,6 +152,9 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormGroup>
+            <div className=" mb-2 text-center font-weight-bold">
+              {errorMessage}
+            </div>
             <Button>Skapa Konto</Button>
           </Form>
         )}

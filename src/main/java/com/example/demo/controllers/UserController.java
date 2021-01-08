@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,14 +43,18 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable String id) {
-        System.out.println(id);
         return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping()
+    public ResponseEntity<List<User>> findAllUsers() {
+        return ResponseEntity.ok(userService.findAllExceptAdmins());
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/email/{email}")
     public ResponseEntity<User> findUserByEmail(@PathVariable String email) {
-        System.out.println(email);
         return ResponseEntity.ok(userService.findByEmail(email));
     }
 
@@ -72,11 +77,21 @@ public class UserController {
         return ResponseEntity.ok(userService.save(user));
     }
 
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUser(@PathVariable String id, @Valid @RequestBody User user) {
         userService.update(id, user);
     }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/updateRole/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeRoleAndUpdateCategories(@PathVariable String id, @Valid @RequestBody User user) {
+        userService.changeRoleAndUpdateCategories(id, user);
+    }
+
+
 
     @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_EDITOR"})
     @DeleteMapping("/{id}")

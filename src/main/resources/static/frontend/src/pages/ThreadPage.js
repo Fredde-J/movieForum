@@ -145,7 +145,7 @@ const ThreadPage = () => {
     if (response.status == 204) {
       getThreads();
     }else{
-      console.error(response)
+      console.error(await response.json())
     }
   }
 

@@ -21,11 +21,17 @@ const Header = () => {
     history.push("/login");
   };
 
+  const goToAdminPage = () => {
+    history.push("/admin")
+  }
+
   const logout = async () => {
     await fetch("/api/v1/users/logout");
     setUser(null);
     history.push("/");
   };
+
+  
 
   return (
     <div className="mb-3">
@@ -35,12 +41,17 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           {user ? (
-            
+            <div>
               <NavItem onClick={logout}>Logga ut</NavItem>
+              {user.roles.includes("ADMIN")&&<NavItem onClick={goToAdminPage} >Admin</NavItem>}
+           </div>
             
           ) : (
             <NavItem onClick={goToLoginPage}>Logga in</NavItem>
           )}
+          </Nav>
+          <Nav>
+           
           </Nav>
           {user && <NavbarText>{user.username}</NavbarText>}
         </Collapse>
