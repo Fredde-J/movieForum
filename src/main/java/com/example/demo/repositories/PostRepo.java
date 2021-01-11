@@ -11,4 +11,8 @@ import java.util.List;
 public interface PostRepo extends MongoRepository<Post, String> {
     @Query("{'thread.id': ?0}")
     List<Post> findByThreadId(String id);
+
+    @Query(value = "{'thread.id': ?0}", delete = true)
+    List<Post> deleteByThreadId(String id);
+
 }

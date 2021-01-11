@@ -1,5 +1,4 @@
 package com.example.demo.controllers;
-
 import com.example.demo.entities.Post;
 import com.example.demo.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +29,12 @@ public class PostController {
         return ResponseEntity.ok(postService.findByThreadId(id));
     }
 
-
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR"})
     @PostMapping
     public ResponseEntity<Post> savePost(@Valid @RequestBody Post post) {
         return ResponseEntity.ok(postService.save(post));
     }
+
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

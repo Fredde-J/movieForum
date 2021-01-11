@@ -20,10 +20,11 @@ public class PostService {
         return postRepo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"post not found with id:"+ id));
     }
 
+    public List<Post> findByThreadId(String id) {
+        return postRepo.findByThreadId(id);
+    }
+
     public Post save(Post post) {
-        Thread thread = threadService.findByid(post.getThread().getId());
-        System.out.println(thread);
-        post.setThread(thread);
         return postRepo.save(post);
     }
 
@@ -34,7 +35,7 @@ public class PostService {
         postRepo.deleteById(id);
     }
 
-    public List<Post> findByThreadId(String id) {
-        return postRepo.findByThreadId(id);
+    public void deleteByThreadId(String threadId) {
+       List<Post> posts = postRepo.deleteByThreadId(threadId);
     }
 }

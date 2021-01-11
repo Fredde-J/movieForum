@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class Post {
     @Id
     private String id;
-    @Size(min = 20, max = 1000)
+    @Size(min = 2, max = 1000)
     private String message;
     @NotNull
     private Long timestamp;

@@ -6,6 +6,7 @@ import com.example.demo.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +37,11 @@ public class ThreadController {
         return ResponseEntity.ok(threadService.findByCategoryId(id));
     }
 
-
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR"})
     @PostMapping
     public ResponseEntity<Thread> saveTread(@Valid @RequestBody Thread thread){
         thread.setIsLocked(false);
-      
+
         return ResponseEntity.ok(threadService.save(thread));
     }
 

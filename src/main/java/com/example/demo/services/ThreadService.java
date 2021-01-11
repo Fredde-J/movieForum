@@ -50,19 +50,10 @@ public class ThreadService {
         if(!threadRepo.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("could not find thread by id:" + id));
         }
-        /*
-       if(!thread.getUser().getRoles().contains("EDITOR") && myUserDetailsService.checkUserRole("ADMIN")) {
-        List<String> roles = thread.getUser().getRoles();
-        roles.add("EDITOR");
-        thread.getUser().setRoles(roles);
+        User user = myUserDetailsService.getCurrentUser();
+        if(!user.getId().equals(thread.getCategory().getUser().getId())&&!user.getRoles().contains("ADMIN")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("only admins or a editor for this thread can update it"));
         }
-
-
-       if(!myUserDetailsService.checkUserRole("EDITOR") || !myUserDetailsService.checkUserRole("ADMIN") ){
-           throw new ResponseStatusException(HttpStatus.FORBIDDEN, String.format("you need to be editor or admin for this thread to update it"));
-       }
-       */
-
        thread.setId(id);
        threadRepo.save(thread);
     }
@@ -71,6 +62,13 @@ public class ThreadService {
         if(!threadRepo.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"thread not found by id: "+id);
         }
+        Thread thread = findByid(id);
+        User user = myUserDetailsService.getCurrentUser();
+        System.out.println("test" + user.getId()+"   "+ thread.getCategory().getUser().getId());
+        if(!user.getId().equals(thread.getCategory().getUser().getId())&&!user.getRoles().contains("ADMIN")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("only admins or a editor for this thread can delete it"));
+        }
+        postService.deleteByThreadId(id);
         threadRepo.deleteById(id);
     }
 }

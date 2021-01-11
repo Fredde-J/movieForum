@@ -250,7 +250,7 @@ const ThreadPage = () => {
                     }}
                   />
                 </FormGroup>
-                {category && category.user && editorOptionsInAddThread()}
+                {category && category.user && user && editorOptionsInAddThread()}
                 <Button color="primary">Skapa tråd</Button>
               </Form>
             </ModalBody>
