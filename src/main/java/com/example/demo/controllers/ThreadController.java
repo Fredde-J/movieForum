@@ -39,6 +39,8 @@ public class ThreadController {
 
     @PostMapping
     public ResponseEntity<Thread> saveTread(@Valid @RequestBody Thread thread){
+        thread.setIsLocked(false);
+      
         return ResponseEntity.ok(threadService.save(thread));
     }
 

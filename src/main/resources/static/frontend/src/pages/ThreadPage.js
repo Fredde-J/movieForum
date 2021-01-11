@@ -22,7 +22,9 @@ const ThreadPage = () => {
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState(null);
   const [message, setMessage] = useState(null);
+  const [warning, setWarning] = useState(false)
   const { user } = useContext(UserContext);
+  const [category, setCategory] = useState(null)
 
   let { id } = useParams();
   let history = useHistory();
@@ -31,14 +33,18 @@ const ThreadPage = () => {
 
   const getThreads = async () => {
     let res = await fetch("/api/v1/threads/getThreadsByCategoryId/" + id);
-    console.log(res);
-    try {
-      res = await res.json();
-      setThreads(res);
-    } catch (e) {
-      console.log(e);
-      console.error("Faild to fetch threads");
+    if(res.status==200){
+      try {
+        res = await res.json();
+        setThreads(res);
+        await checkCategory()
+      } catch (e) {
+        console.error(e);
+      }
+    }else{
+      console.error(await res.json())
     }
+    
   };
 
   const goToPosts = (thread) => {
@@ -48,26 +54,14 @@ const ThreadPage = () => {
 
   const addThread = async (e) => {
     e.preventDefault();
-    let category;
-    if (!threads[0]) {
-      let res = await fetch("/api/v1/categories/" + id);
-      try {
-        res = await res.json();
-        category = res;
-      } catch (e) {
-        console.error(e);
-        console.error("Faild fetch categories");
-      }
-    } else {
-      category = threads[0].category;
-    }
-
+    
     let thread = {
       title: title,
       timestamp: Date.now(),
       category: category,
       user:user,
       isLocked: false,
+      warning: warning
     };
 
     let response = await fetch("/api/v1/threads", {
@@ -76,7 +70,7 @@ const ThreadPage = () => {
       body: JSON.stringify(thread),
     });
 
-    if (response.status == 200) {
+    if (response.status === 200) {
       try {
         thread = await response.json();
       } catch (e) {
@@ -101,39 +95,53 @@ const ThreadPage = () => {
     getThreads();
   };
 
-  const editorOptions = (thread) => {
+  const editorOptionsInList = (thread) => {
     if (user) {
-      if (user.roles.includes("EDITOR")&& user.id==thread.category.user.id || user.roles.includes("ADMIN")) {
-
-        return (
-          <Row >
-            <Col>
-              <Label check>
-                <Input type="checkbox" readOnly checked={thread.isLocked} onClick={() => {
-                lockThread(thread);
-              }} />
-                lås
-              </Label>
-            </Col>
-            <Col>
-            <p className="text-danger text-center" onClick={()=>{deleteThread(thread)}}> Radera </p>
-            </Col>
-           
-          </Row>
-        );
+      if(category&&category.user){
+        if ((user.roles.includes("EDITOR")&& user.id===thread.category.user.id) || user.roles.includes("ADMIN")) {
+          return (
+            <Row >
+              <Col>
+                <Label check>
+                  <Input type="checkbox" readOnly checked={thread.isLocked} onClick={() => {
+                  lockThread(thread);
+                }} />
+                  lås
+                </Label>
+              </Col>
+              <Col>
+              <p className="text-danger text-center" onClick={()=>{deleteThread(thread)}}> Radera </p>
+              </Col>
+             
+            </Row>
+          );
+        }
       }
+     
     }
   };
 
+  const editorOptionsInAddThread = ()=>{
+      if (user.roles.includes("ADMIN") || (user.roles.includes("EDITOR") && user.id==category.user.id)) {
+        return (
+          <FormGroup check className="mb-2">
+          <Label check>
+            <Input type="checkbox" readOnly checked={warning} onClick={()=>{setWarning(!warning)}}  />
+            Varningsinlägg
+          </Label>
+        </FormGroup>
+        );
+        } 
+  }
+
   const lockThread = async (thread) => {
     thread.isLocked = !thread.isLocked;
-    console.log(thread.isLocked);
     let response = await fetch("/api/v1/threads/" + thread.id, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(thread),
     });
-    if (response.status == 204) {
+    if (response.status === 204) {
       getThreads();
     }
   };
@@ -149,8 +157,27 @@ const ThreadPage = () => {
     }
   }
 
+  const checkCategory = async ()=>{
+    if (threads==null||threads[0]==undefined||threads[0]==null) {
+      let res = await fetch("/api/v1/categories/" + id);
+      if(res.status===200){
+        try {
+          res = await res.json();
+           setCategory(res);
+        } catch (e) {
+          console.error(e);
+        }
+      }else{
+        console.error(await res.json())
+      }
+     
+    } else {
+      setCategory(threads[0].category);
+    }
+  }
+
   useEffect(() => {
-    getThreads();
+   getThreads();
   }, []);
 
   return (
@@ -170,7 +197,7 @@ const ThreadPage = () => {
               return (
                 <div>
                   {thread.isLocked ? (
-                    <Button disabled key={i} block size="lg" className="mb-1">
+                    <Button disabled key={thread.id} block size="lg" className="mb-1">
                       {thread.title} (låst)
                     </Button>
                   ) : (
@@ -180,6 +207,7 @@ const ThreadPage = () => {
                       }}
                       key={i}
                       block
+                      color={thread.warning?("danger"):("secondary")}
                       className="mb-1"
                       size="lg"
                     >
@@ -187,7 +215,7 @@ const ThreadPage = () => {
                     </Button>
                   )}
 
-                  {editorOptions(thread)}
+                  {editorOptionsInList(thread)}
                 </div>
               );
             })}
@@ -222,6 +250,7 @@ const ThreadPage = () => {
                     }}
                   />
                 </FormGroup>
+                {category && category.user && editorOptionsInAddThread()}
                 <Button color="primary">Skapa tråd</Button>
               </Form>
             </ModalBody>

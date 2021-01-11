@@ -25,14 +25,18 @@ public class Thread {
     @Valid
     @DBRef
     private User user;
+    @NotNull
     private Boolean isLocked;
+    @NotNull
+    private Boolean warning;
 
 
-    public Thread(String title, Long timestamp, Category category, User user, boolean isLocked) {
+    public Thread(String title, Long timestamp, Category category, User user, boolean isLocked, boolean warning) {
         this.title = title;
         this.timestamp = timestamp;
         this.category = category;
         this.user = user;
         this.isLocked = isLocked;
+        this.warning = warning;
     }
 }

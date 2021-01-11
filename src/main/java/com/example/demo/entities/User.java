@@ -27,6 +27,7 @@ public class User {
     private List<@NotEmpty String> roles;
 
 
+
     public User(String username, String email, String password,List<String> roles) {
         this.username = username;
         this.email = email;

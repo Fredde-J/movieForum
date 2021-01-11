@@ -61,10 +61,10 @@ const PostPage = () => {
       {posts &&
         posts.map((post, i) => {
           return (
-            <Card className="mt-2">
-              <CardBody>
+            <Card className="mt-2" outline color= {post.thread.warning ? ("danger"):("secondary")}>
+              <CardBody >
                 <h5>{post.user.username}</h5>
-                <CardText> {post.message} </CardText>
+                <CardText>{post.message}</CardText> 
               </CardBody>
             </Card>
           );
