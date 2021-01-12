@@ -64,7 +64,6 @@ public class ThreadService {
         }
         Thread thread = findByid(id);
         User user = myUserDetailsService.getCurrentUser();
-        System.out.println("test" + user.getId()+"   "+ thread.getCategory().getUser().getId());
         if(!user.getId().equals(thread.getCategory().getUser().getId())&&!user.getRoles().contains("ADMIN")){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("only admins or a editor for this thread can delete it"));
         }

@@ -20,7 +20,6 @@ const PostPage = () => {
 
   const getPosts = async () => {
     let res = await fetch(`/api/v1/posts/getPostsByThreadId/` + id);
-    console.log(res);
     try {
       res = await res.json();
       setPosts(res);
@@ -44,7 +43,7 @@ const PostPage = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(postBody),
     });
-    if (response.status == 200) {
+    if (response.status === 200) {
       setAnswer(null);
       getPosts();
     } else {
@@ -61,7 +60,7 @@ const PostPage = () => {
       {posts &&
         posts.map((post, i) => {
           return (
-            <Card className="mt-2" outline color= {post.thread.warning ? ("danger"):("secondary")}>
+            <Card className="mt-2" key={post.id} outline color= {post.thread.warning ? ("danger"):("secondary")}>
               <CardBody >
                 <h5>{post.user.username}</h5>
                 <CardText>{post.message}</CardText> 

@@ -13,24 +13,26 @@ const Home = () => {
 
     const getCategories = async () =>{
             let res = await fetch(`api/v1/categories`);
-            console.log(res)
-            try {
-              res = await res.json();
-              setCategories(res);
-            } catch(e) {
-              console.log(e)
-              console.error("Faild to fetch categories");
+            if(res.status===200){
+              try {
+                res = await res.json();
+                setCategories(res);
+              } catch(e) {
+                console.log(e)
+                console.error("Faild to fetch categories");
+              }
+            }else{
+              console.error(await res.json())
             }
+           
         }
 
         const goToThreads = (category)=>{
-          console.log(category.id);
           history.push("/threads/"+category.id)
         }
 
         useEffect(() => {
            getCategories()
-           console.log(categories)
         }, [])
          
   return (

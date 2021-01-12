@@ -33,7 +33,7 @@ const ThreadPage = () => {
 
   const getThreads = async () => {
     let res = await fetch("/api/v1/threads/getThreadsByCategoryId/" + id);
-    if(res.status==200){
+    if(res.status===200){
       try {
         res = await res.json();
         setThreads(res);
@@ -48,7 +48,6 @@ const ThreadPage = () => {
   };
 
   const goToPosts = (thread) => {
-    console.log(thread.id);
     history.push("/posts/" + thread.id);
   };
 
@@ -122,7 +121,7 @@ const ThreadPage = () => {
   };
 
   const editorOptionsInAddThread = ()=>{
-      if (user.roles.includes("ADMIN") || (user.roles.includes("EDITOR") && user.id==category.user.id)) {
+      if (user.roles.includes("ADMIN") || (user.roles.includes("EDITOR") && user.id===category.user.id)) {
         return (
           <FormGroup check className="mb-2">
           <Label check>
@@ -150,7 +149,7 @@ const ThreadPage = () => {
     let response = await fetch("/api/v1/threads/" + thread.id, {
       method: "DELETE",
     });
-    if (response.status == 204) {
+    if (response.status === 204) {
       getThreads();
     }else{
       console.error(await response.json())
@@ -158,7 +157,7 @@ const ThreadPage = () => {
   }
 
   const checkCategory = async ()=>{
-    if (threads==null||threads[0]==undefined||threads[0]==null) {
+    if (threads===null||threads[0]===undefined||threads[0]===null) {
       let res = await fetch("/api/v1/categories/" + id);
       if(res.status===200){
         try {

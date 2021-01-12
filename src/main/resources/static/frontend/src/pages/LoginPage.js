@@ -61,7 +61,7 @@ const LoginPage = () => {
 
     if (response.status === 400) {
       response = await response.json();
-      console.log(response.message);
+     
       setErrorMessage(response.message);
     } else {
       setErrorMessage("");

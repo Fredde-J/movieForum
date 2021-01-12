@@ -36,7 +36,7 @@ const AdminPage = () => {
     let response = await fetch("/api/v1/users/" + user.id, {
       method: "DELETE",
     });
-    if (response.status == 204) {
+    if (response.status === 204) {
       fetchUsers();
       modalToggle();
     }else{
@@ -53,7 +53,7 @@ const AdminPage = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user),
           });
-          if (response.status == 204) {
+          if (response.status === 204) {
             collapseToggle()
           }else{
               console.error(await response.json())
@@ -64,7 +64,7 @@ const AdminPage = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user),
           });
-          if (response.status == 204) {
+          if (response.status === 204) {
             collapseToggle()
           }else{
               console.error(await response.json())
@@ -93,7 +93,7 @@ const AdminPage = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(category),
     });
-    if (response.status == 204) {
+    if (response.status === 204) {
       fetchAvailableCategories()
     }
   };
@@ -101,7 +101,6 @@ const AdminPage = () => {
 
   useEffect(() => {
     fetchUsers();
-    console.log(users);
   }, []);
 
   return (
@@ -133,7 +132,7 @@ const AdminPage = () => {
               {user.roles.includes("EDITOR") ? (
                 <div>
                   <Button block onClick={()=>{updateUser(["USER"]);}}>Ta bort rollen som moderator</Button>
-                  <Button block onClick={fetchAvailableCategories}>Gör användaren moderator för ett underforum</Button>
+                  <Button block onClick={fetchAvailableCategories}>Gör användaren moderator för ett ledigt underforum</Button>
                   <Collapse isOpen={collapse}>
                   <Card>
                       <CardBody>
