@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.entities.User;
 import com.example.demo.services.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +59,6 @@ public class UserController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR"})
     @GetMapping("/logout")
-    @Operation(summary = "Logout the current authenticated User")
     private ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
