@@ -91,7 +91,7 @@ public class UserController {
 
 
 
-    @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_EDITOR"})
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable String id) {
